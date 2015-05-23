@@ -1,5 +1,5 @@
 <h1>Sign-in</h1>
-  <form class="" method="POST" action="/sessions">
+  <form class="" method="POST" action="/session">
     <fieldset>
       <div>
         <label for = "username">Username:</label>
@@ -12,7 +12,7 @@
     </fieldset>
   </form>
   <%= form_for(@user) do |f| %>
-    <label>email</label>
+    <label>Email</label>
     <%= f.text_field :email, placeholder: "New Email" %>
     <label>Username</label>
     <%= f.text_field :username, placeholder: "New Username" %>

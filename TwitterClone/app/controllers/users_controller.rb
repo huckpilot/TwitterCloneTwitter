@@ -1,4 +1,11 @@
-class UsersController < ActionController::Base
+class UsersController < ApplicationController
+
+before_action :authenticate, except: [:new, :create]
+
+  def show
+    @user = User.find(params[:id])
+  end
+
   def create
     @user = User.create(user_params)
   end
