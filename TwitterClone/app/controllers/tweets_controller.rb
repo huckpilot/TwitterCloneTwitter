@@ -5,8 +5,8 @@ class TweetsController < ApplicationController
   end
 
   def index
+    puts "I AM GETTING TWEETS"
     @tweets = Tweet.where(user_id: session[:user_id])
-    render json: @tweets
   end
 
 

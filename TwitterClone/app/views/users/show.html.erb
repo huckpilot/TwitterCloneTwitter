@@ -4,5 +4,4 @@
   <%= f.text_field :content, placeholder: "tweet this" %>
   <%= f.submit %>
 <% end %>
-<div id = 'tweets'>
-</div>
+<%= react_component('TweetBox', {:tweets => @tweets.to_json}, {:prerender => false}) %>
