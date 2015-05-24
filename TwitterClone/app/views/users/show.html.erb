@@ -1,1 +1,10 @@
 <h1>Welcome <%= @user.username %></h1>
+<%= form_for @tweet do |f| %>
+  <%= f.label :content, "tweet this:" %>
+  <%= f.text_field :content, placeholder: "tweet this" %>
+  <%= f.submit %>
+<% end %>
+<% @user.tweets.each do |tweet| %>
+  <p><%= tweet[:created_at] %></p>
+  <h5><%= tweet[:content] %></h5>
+<% end %>
