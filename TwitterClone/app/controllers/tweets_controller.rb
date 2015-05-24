@@ -4,6 +4,12 @@ class TweetsController < ApplicationController
     redirect_to user_path(session[:user_id])
   end
 
+  def index
+    @tweets = Tweet.where(user_id: session[:user_id])
+    render json: @tweets
+  end
+
+
   private
   def tweet_params
     puts "THIS IS A TEST"
