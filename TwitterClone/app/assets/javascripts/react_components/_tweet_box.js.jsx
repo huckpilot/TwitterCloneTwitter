@@ -26,3 +26,12 @@ var TweetsList = React.createClass({
     );
   }
 });
+
+var Tweet = React.createClass({
+  render: function () {
+    return (
+      <p>{ this.props.content }</p>
+    )
+  }    
+})
+
