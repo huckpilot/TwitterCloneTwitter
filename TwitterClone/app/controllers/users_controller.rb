@@ -5,13 +5,15 @@ before_action :authenticate, except: [:new, :create]
   def show
     # A new @tweet must be passed through to any page that contains a new tweet form
     @tweet = Tweet.new
-    @tweets = Tweet.where(user_id: session[:user_id])
-    @user = User.joins('INNER JOIN tweets ON users.id = tweets.user_id WHERE users.id = ?;', params[:id])
-    if @user != []
-      return @user
-    else
-      @user = User.find(params[:id])
-    end
+    @tweets = {
+      :tweets => Tweet.where(user_id: session[:user_id]),
+      :form => {
+        :action => tweets_path,
+        :csrf_param => request_forgery_protection_token,
+        :csrf_token => form_authenticity_token
+      }
+    }
+    @user = User.find(params[:id])
   end
 
   def create

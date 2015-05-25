@@ -1,7 +1,2 @@
 <h1>Welcome <%= @user.username %></h1>
-<%= form_for @tweet do |f| %>
-  <%= f.label :content, "tweet this:" %>
-  <%= f.text_field :content, placeholder: "tweet this" %>
-  <%= f.submit %>
-<% end %>
 <%= react_component('TweetBox', {:tweets => @tweets.to_json}, {:prerender => false}) %>
