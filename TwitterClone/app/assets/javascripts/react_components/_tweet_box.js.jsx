@@ -1,8 +1,6 @@
 var TweetBox = React.createClass({
   getInitialState: function() {
-    serverTweets = JSON.parse(this.props.tweets)
-    serverTweets = {tweets: serverTweets}
-    return serverTweets
+    return JSON.parse(this.props.tweets)
   },
 
   handleTweetSubmit: function(formData, action) {
@@ -16,11 +14,22 @@ var TweetBox = React.createClass({
     });
   },
 
+  handleTweetDelete: function(formData, action) {
+    $.ajax({
+      data: formData,
+      url: action,
+      type: "DELETE",
+      success: function(data) {
+        this.setState({tweets: data})
+      }.bind(this)
+    });
+  },
+
   render: function() {
     return (
       <div className="tweets">
-        <TweetsList tweets={this.state.tweets.tweets} />
-        <TweetsForm form={this.state.tweets.form} onTweetSubmit={this.handleTweetSubmit} />
+        <TweetsList tweets={this.state.tweets} form={this.state.form} onTweetDelete={this.handleTweetDelete} />
+        <TweetsForm form={this.state.form} onTweetSubmit={this.handleTweetSubmit} />
       </div>
     );
   }
@@ -29,8 +38,8 @@ var TweetBox = React.createClass({
 var TweetsList = React.createClass({
   render: function() {
     var tweetNodes = this.props.tweets.map(function(tweet) {
-      return <Tweet tweet={tweet} />
-    });
+      return <Tweet tweet={tweet} form={this.props.form} onTweetDelete={this.props.onTweetDelete} />
+    }.bind(this));
     return (
       <div className="tweets-list">
         {tweetNodes}
@@ -43,7 +52,6 @@ var TweetsForm = React.createClass({
   handleSubmit: function(event){
     event.preventDefault();
     var tweet = this.refs.content.getDOMNode().value.trim()
-
     var formData = $(this.refs.form.getDOMNode()).serialize()
     this.props.onTweetSubmit(formData, this.props.form.action);
     this.refs.content.getDOMNode().value = "";
@@ -60,11 +68,34 @@ var TweetsForm = React.createClass({
   }
 });
 
+var TweetDeleteForm = React.createClass({
+  handleDelete: function(event) {
+    event.preventDefault();
+    var formData = $(this.refs.form.getDOMNode()).serialize()
+    this.props.onTweetDelete(formData, this.refs.form.props.action);
+  },
+
+  render: function() {
+    var path = "/tweets/" + this.props.tweet.id
+    return (
+      <form ref="form" action={path} method="post" onSubmit={this.handleDelete}>
+        <input type="hidden" name={ this.props.form.csrf_param } value={ this.props.form.csrf_token } />
+        <input type="hidden" name="_method" value="delete" />
+        <button>delete</button>
+      </form>
+    );
+  }
+});
+
 var Tweet = React.createClass({
   render: function () {
     return (
-      <p>{ this.props.tweet.content }</p>
-    )
+      <div>
+        <p>{this.props.tweet.content}</p>
+        <p>{this.props.tweet.created_at}</p>
+        <TweetDeleteForm tweet={this.props.tweet} form={this.props.form} onTweetDelete={this.props.onTweetDelete} />
+      </div>
+    );
   }
 });
 
